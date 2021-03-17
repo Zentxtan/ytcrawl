@@ -21,8 +21,15 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="src/main/java/sentimentalAnalysis/stanford-corenlp-3.9.2.jar"/>
-	<classpathentry kind="lib" path="src/main/java/sentimentalAnalysis/stanford-corenlp-3.9.2-models.jar"/>
-	<classpathentry kind="lib" path="src/main/java/sentimentalAnalysis/ejml-0.23.jar"/>
+	<classpathentry kind="lib" path="src/main/resources/jsoup-1.13.1.jar"/>
+	<classpathentry kind="lib" path="src/main/resources/json-java.jar"/>
+	<classpathentry kind="lib" path="src/main/resources/stanford-corenlp-4.2.0.jar"/>
+	<classpathentry kind="lib" path="src/main/resources/stanford-corenlp-4.2.0-models.jar"/>
+	<classpathentry kind="lib" path="src/main/resources/stanford-corenlp-4.2.0-sources.jar"/>
+	<classpathentry kind="lib" path="src/main/resources/stanford-corenlp-4.2.0-javadoc.jar"/>
+	<classpathentry kind="lib" path="src/main/resources/ejml-simple-0.39.jar"/>
+	<classpathentry kind="lib" path="src/main/resources/ejml-core-0.39.jar"/>
+	<classpathentry kind="lib" path="src/main/resources/ejml-simple-0.39-sources.jar"/>
+	<classpathentry kind="lib" path="src/main/resources/ejml-ddense-0.39.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

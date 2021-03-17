@@ -1,9 +1,6 @@
 import com.google.api.client.auth.oauth2.Credential;
-import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
-import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson2.JacksonFactory;
+
 
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.model.CommentSnippet;
@@ -13,7 +10,6 @@ import com.google.common.collect.Lists;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
-import java.util.Arrays;
 import java.util.List;
 
 public class YTCommentCrawler {
@@ -21,47 +17,48 @@ public class YTCommentCrawler {
     private static final String DEVELOPER_KEY = "AIzaSyAomqNsYSaPsN7hSkAB2lRPwtSyyMJlyVY";
     private static final String APPLICATION_NAME = "YTCrawlCrawl";
    // private static final JsonFactory JSON_FACTORY = new JacksonFactory().getDefaultInstance();
+   
+    YTCommentCrawler() throws GoogleJsonResponseException, GeneralSecurityException, IOException{
+    	myYouTubeCrawl();
+    }
+    
+    private static void myYouTubeCrawl() throws GeneralSecurityException, IOException, GoogleJsonResponseException{
+    	 YouTube youtubeService = getService();
+         // Define and execute the API request
+         YouTube.CommentThreads.List request = youtubeService.commentThreads().list("id,snippet");
+         CommentThreadListResponse response = request.setKey(DEVELOPER_KEY)
+             .setMaxResults(20L)//<--- limit set to 100
+             .setVideoId("eq5kdb6uIZQ") //this is the video code <----
+             .execute();
+         
+         List<CommentThread> channelComments = response.getItems();
+         CommentSnippet snippet;
+         
+         if (channelComments.isEmpty()) {
+             System.out.println("Can't get channel comments.");
+         } else {
 
- 
-    public static void main(String[] args)
-        throws GeneralSecurityException, IOException, GoogleJsonResponseException {
-        YouTube youtubeService = getService();
-        // Define and execute the API request
-        YouTube.CommentThreads.List request = youtubeService.commentThreads().list("id,snippet");
-        CommentThreadListResponse response = request.setKey(DEVELOPER_KEY)
-            .setMaxResults(20L)//<--- limit set to 100
-            .setVideoId("eq5kdb6uIZQ") //this is the video code <----
-            .execute();
-        
-        List<CommentThread> channelComments = response.getItems();
-        CommentSnippet snippet;
-        
-        if (channelComments.isEmpty()) {
-            System.out.println("Can't get channel comments.");
-        } else {
-
-        	  
+         	  
             SentimentAnalyzer sentimentAnalyzer = new SentimentAnalyzer();
-    		sentimentAnalyzer.initialize();
-    		
-    		
-            System.out
-                    .println("\n================== Generating Sentimental Assessment ==================\n");
-            for (CommentThread channelComment : channelComments) {
-                snippet = channelComment.getSnippet().getTopLevelComment()
-                        .getSnippet();
-              
-                SentimentResult sentimentResult = sentimentAnalyzer.getSentimentResult(snippet.getTextDisplay());
-	    		System.out.println(snippet.getAuthorDisplayName()
-	    				+ "\n"
-	    				+ snippet.getTextDisplay() + "\n" 
-	    				+ "\n" 
-	    				+ "Sentiment Type: " + sentimentResult.getSentimentType() + "\n");
+     		sentimentAnalyzer.initialize();
+     		
+     		
+             System.out
+                     .println("\n================== Generating Sentimental Assessment ==================\n");
+             for (CommentThread channelComment : channelComments) {
+                 snippet = channelComment.getSnippet().getTopLevelComment()
+                         .getSnippet();
+               
+                 SentimentResult sentimentResult = sentimentAnalyzer.getSentimentResult(snippet.getTextDisplay());
+ 	    		System.out.println(snippet.getAuthorDisplayName()
+ 	    				+ "\n"
+ 	    				+ snippet.getTextDisplay() + "\n" 
+ 	    				+ "\n" 
+ 	    				+ "Sentiment Type: " + sentimentResult.getSentimentType() + "\n");
 
-            }
-        }
-        
-       
+             }
+         }
+         
     }
 
     public static YouTube getService() throws GeneralSecurityException, IOException {
@@ -71,7 +68,6 @@ public class YTCommentCrawler {
         
         return new YouTube.Builder(Auth.HTTP_TRANSPORT, Auth.JSON_FACTORY, credential)
                 .setApplicationName(APPLICATION_NAME).build();
-        
         
     }
 
